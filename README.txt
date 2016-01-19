@@ -1,0 +1,1 @@
+All you need to do to work on this is download the latest version of Android Studio, pull the project, and open it up!
