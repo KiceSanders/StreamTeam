@@ -43,6 +43,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         mCreateUser = (Button) findViewById(R.id.create_user);
+        mCreateUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), CreateUser.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void showProgress(boolean show) {
@@ -59,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
     }
     private class LoginQuery extends AsyncTask<String, ResultSet, ResultSet> {
         @Override
-        protected void onPreExecute () {}
+        protected void onPreExecute () {
+
+        }
 
         @Override
         protected void onPostExecute(ResultSet r){

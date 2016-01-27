@@ -10,4 +10,5 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_username">Username</string>
     <string name="action_create_user">Register</string>
+    <string name="create_user">Create User</string>
 </resources>
