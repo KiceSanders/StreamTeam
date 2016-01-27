@@ -1,8 +1,12 @@
 package edu.rosehulman.sanderkd.streamteam;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,9 +16,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public static ConnectionClass con;
+    public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
+    public static final int REQUEST_LOGIN = 1;
+    public String mUsername;
+    public TextView mText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +51,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        con = new ConnectionClass();
+        mText = (TextView) findViewById(R.id.welcome_text);
+
+        if(savedInstanceState == null){
+            logout();
+        }
     }
 
     @Override
@@ -74,6 +92,14 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK){
+            mUsername = data.getStringExtra(EXTRA_USERNAME);
+            Log.d("db", "username in main: " + mUsername);
+            mText.setText("Welcome " + mUsername);
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -90,12 +116,17 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void logout(){
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivityForResult(loginIntent, REQUEST_LOGIN);
     }
 }
