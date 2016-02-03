@@ -11,4 +11,5 @@
     <string name="prompt_username">Username</string>
     <string name="action_create_user">Register</string>
     <string name="create_user">Create User</string>
+    <string name="facebook_app_id">1318388444853330</string>
 </resources>

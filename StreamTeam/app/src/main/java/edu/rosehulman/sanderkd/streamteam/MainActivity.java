@@ -2,10 +2,12 @@ package edu.rosehulman.sanderkd.streamteam;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -27,10 +30,15 @@ public class MainActivity extends AppCompatActivity
     public String mUsername;
     public TextView mText;
 
+    private FragmentManager mFragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mFragmentManager = getSupportFragmentManager();
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -55,9 +63,13 @@ public class MainActivity extends AppCompatActivity
         con = new ConnectionClass();
         mText = (TextView) findViewById(R.id.welcome_text);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             logout();
         }
+
+        toggleFragment();
+
+        Log.d("db", "message to be displayed");
     }
 
     @Override
@@ -129,4 +141,22 @@ public class MainActivity extends AppCompatActivity
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivityForResult(loginIntent, REQUEST_LOGIN);
     }
+
+
+
+    // added by derrowap:
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    private void toggleFragment() {
+        Fragment fragment = mFragmentManager.findFragmentByTag("fragment_tag");
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(android.R.id.content, new FragmentFacebookLoginButton(), "fragment_tag");
+        transaction.commit();
+    }
+
+
 }

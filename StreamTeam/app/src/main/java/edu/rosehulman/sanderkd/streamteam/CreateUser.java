@@ -41,7 +41,7 @@ public class CreateUser extends AppCompatActivity {
     private void createUser() {
         String userid = mUsername.getText().toString();
         String pw = mPassword.getText().toString();
-        String query = "insert into Users Values ('" + userid + "','" + pw + "')";
+        String query = "insert into User Values ('" + userid + "','" + pw + "')";
         new CreateUserQuery().execute(query, userid);
     }
 

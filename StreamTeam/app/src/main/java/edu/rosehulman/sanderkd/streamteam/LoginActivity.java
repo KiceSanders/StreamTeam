@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         String userid = mUsername.getText().toString();
         String pw = mPassword.getText().toString();
-        String query = "select * from Users where Username='" + userid + "' and Password='" + pw + "'";
+        String query = "select * from User where Username='" + userid + "' and Password='" + pw + "'";
         new LoginQuery().execute(query);
 
     }
