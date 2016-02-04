@@ -10,32 +10,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="edu.rosehulman.sanderkd.streamteam.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar_main"
+    android:weightSum="1">
 
-    <TextView
-        android:id="@+id/welcome_text"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".Activities.MainActivity"
+        tools:showIn="@layout/app_bar_main"
+        android:id="@+id/fragment_container">
+    </FrameLayout>
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/welcome_text"
+        android:id="@+id/fragment_container_lower"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/fragment_container"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="72dp" />
+        android:layout_alignParentStart="true">
+    </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Not signed into Facebook"
-        android:id="@+id/fb_greet"
-        android:layout_alignBottom="@+id/login_button"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+
+
 </RelativeLayout>

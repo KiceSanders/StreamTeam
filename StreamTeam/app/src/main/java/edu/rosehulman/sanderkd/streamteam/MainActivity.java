@@ -20,15 +20,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import edu.rosehulman.sanderkd.streamteam.Fragments.AddFriendFragment;
+import edu.rosehulman.sanderkd.streamteam.Fragments.FragmentFacebookLoginButton;
+import edu.rosehulman.sanderkd.streamteam.Fragments.FriendListFragment;
+import edu.rosehulman.sanderkd.streamteam.Fragments.FriendTopFragment;
+
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FriendTopFragment.Callback{
 
     public static ConnectionClass con;
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
     public static final int REQUEST_LOGIN = 1;
-    public String mUsername;
     public TextView mText;
+    public static String USER;
 
     private FragmentManager mFragmentManager;
 
@@ -61,13 +66,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         con = new ConnectionClass();
-        mText = (TextView) findViewById(R.id.welcome_text);
 
         if (savedInstanceState == null) {
             logout();
         }
-
-        toggleFragment();
 
         Log.d("db", "message to be displayed");
     }
@@ -106,9 +108,7 @@ public class MainActivity extends AppCompatActivity
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK){
-            mUsername = data.getStringExtra(EXTRA_USERNAME);
-            Log.d("db", "username in main: " + mUsername);
-            mText.setText("Welcome " + mUsername);
+            USER = data.getStringExtra(EXTRA_USERNAME);
         }
     }
 
@@ -118,18 +118,21 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        Fragment switchTo = null;
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+         if (id == R.id.nav_social_media) {
+            switchTo = new FragmentFacebookLoginButton();
+        } else if (id == R.id.nav_friends) {
+            friendFragment(true);
 
         } else if (id == R.id.nav_logout) {
             logout();
+        }
+
+        if(switchTo!=null){
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            ft.replace(R.id.fragment_container, switchTo);
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,6 +145,27 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(loginIntent, REQUEST_LOGIN);
     }
 
+    //friend : true if on friends tab, false if on friend request tab
+    private void friendFragment(Boolean friend) {
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+
+        //doesn't replace if already on the friends tab
+        if(!(mFragmentManager.findFragmentById(R.id.fragment_container) instanceof FriendTopFragment)) {
+            ft.replace(R.id.fragment_container, new FriendTopFragment());
+        }
+        if(friend && !(mFragmentManager.findFragmentById(R.id.fragment_container_lower) instanceof FriendListFragment)){
+            ft.replace(R.id.fragment_container_lower, new FriendListFragment());
+        }
+        else if(!friend && !(mFragmentManager.findFragmentById(R.id.fragment_container_lower) instanceof AddFriendFragment)){
+            ft.replace(R.id.fragment_container_lower, new AddFriendFragment());
+        }
+        int nEntries = getSupportFragmentManager().getBackStackEntryCount();
+        for(int i = 0 ; i < nEntries ; i ++){
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+        ft.commit();
+    }
+
 
 
     // added by derrowap:
@@ -151,12 +175,9 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
-    private void toggleFragment() {
-        Fragment fragment = mFragmentManager.findFragmentByTag("fragment_tag");
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(android.R.id.content, new FragmentFacebookLoginButton(), "fragment_tag");
-        transaction.commit();
+
+    @Override
+    public void onFragmentInteraction(Boolean friend) {
+        friendFragment(friend);
     }
-
-
 }

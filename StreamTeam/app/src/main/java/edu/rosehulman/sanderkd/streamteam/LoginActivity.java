@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         String userid = mUsername.getText().toString();
         String pw = mPassword.getText().toString();
-        String query = "select * from User where Username='" + userid + "' and Password='" + pw + "'";
+        String query = "Exec Login '" +userid + "','" + pw + "'";
         new LoginQuery().execute(query);
 
     }
@@ -73,17 +74,25 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ResultSet r){
             try{
+
                 r.next();
-                String username = r.getString("Username");
-                Intent intent = new Intent();
-                intent.putExtra(MainActivity.EXTRA_USERNAME, username);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                if(r.getString("Status").equals("0")) {
+                    Log.e("error", "Invalid Credintials");
+                    Log.d("db", r.getWarnings().getMessage());
+                    Toast.makeText(LoginActivity.this, r.getWarnings().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    String username = r.getString("Username");
+                    Intent intent = new Intent();
+                    intent.putExtra(MainActivity.EXTRA_USERNAME, username);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+
 
             }
             catch (SQLException e){
                 e.printStackTrace();
-                Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -95,9 +104,14 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 Connection con = MainActivity.con.CONN();
                 if (con == null) {
+                    Log.e("error", "no connection");
                 } else {
-                    Statement stmt = con.createStatement();
-                    res = stmt.executeQuery(mQuery);
+                    Log.d("LoginActivity", "Performing query");
+                    CallableStatement stmt = con.prepareCall(mQuery);
+                    Log.d("LoginActivity", "Created Statment");
+//                    boolean test = stmt.execute(mQuery);
+                    stmt.execute();
+                    res = stmt.getResultSet();
                 }
             } catch (Exception ex) {
                 Log.d("db", ex.toString());

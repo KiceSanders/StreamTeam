@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/friend_row_image"
+        android:src="@drawable/user_picture"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:id="@+id/friend_row_text"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/friend_row_image"
+        android:layout_toEndOf="@+id/friend_row_image"
+        android:layout_marginLeft="23dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="23dp" />
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/add"
+        android:id="@+id/friend_request_add"
+        android:layout_marginRight="52dp"
+        android:layout_marginEnd="52dp"
+        android:layout_alignBaseline="@+id/friend_row_text"
+        android:layout_alignBottom="@+id/friend_row_text"
+        android:layout_toLeftOf="@+id/friend_request_delete"
+        android:layout_toStartOf="@+id/friend_request_delete" />
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/delete"
+        android:id="@+id/friend_request_delete"
+        android:layout_marginRight="26dp"
+        android:layout_marginEnd="26dp"
+        android:layout_alignBaseline="@+id/friend_row_text"
+        android:layout_alignBottom="@+id/friend_row_text"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

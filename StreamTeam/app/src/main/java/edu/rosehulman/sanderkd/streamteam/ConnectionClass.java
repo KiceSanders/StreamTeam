@@ -18,6 +18,7 @@ public class ConnectionClass {
 
     @SuppressLint("NewApi")
     public Connection CONN() {
+        Log.d("ConnectionClass", "starting");
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -36,6 +37,7 @@ public class ConnectionClass {
         } catch (Exception e) {
             Log.d("ERRO", e.getMessage());
         }
+        Log.d("ConnectionClass", "connected");
         return conn;
     }
 }

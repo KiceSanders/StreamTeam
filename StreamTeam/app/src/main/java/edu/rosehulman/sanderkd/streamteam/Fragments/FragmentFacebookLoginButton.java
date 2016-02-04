@@ -1,4 +1,4 @@
-package edu.rosehulman.sanderkd.streamteam;
+package edu.rosehulman.sanderkd.streamteam.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import junit.framework.TestCase;
+import edu.rosehulman.sanderkd.streamteam.R;
 
 /**
  * Created by derrowap on 2/3/2016.
@@ -71,7 +71,7 @@ public class FragmentFacebookLoginButton extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.content_main, container, false);
+        return inflater.inflate(R.layout.fragment_facebook_login, container, false);
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -101,6 +101,7 @@ public class FragmentFacebookLoginButton extends Fragment {
 
     private void setupTextDetails(View view) {
         mTextDetails = (TextView) view.findViewById(R.id.fb_greet);
+        Log.d("FacbookLogin", mTextDetails.toString());
     }
 
     private void setupTokenTracker() {
@@ -124,7 +125,7 @@ public class FragmentFacebookLoginButton extends Fragment {
 
     private void setupLoginButton(View view) {
         LoginButton mButtonLogin = (LoginButton) view.findViewById(R.id.login_button);
-        mButtonLogin.setFragment(this);
+        mButtonLogin.setFragment(FragmentFacebookLoginButton.this);
         mButtonLogin.setReadPermissions("user_friends");
         mButtonLogin.registerCallback(mCallbackManager, mFacebookCallback);
     }
@@ -133,6 +134,7 @@ public class FragmentFacebookLoginButton extends Fragment {
         StringBuffer stringBuffer = new StringBuffer();
         if(profile != null) {
             stringBuffer.append("Welcome " + profile.getName());
+            Log.d("FacebookLogin", stringBuffer.toString());
         }
         return stringBuffer.toString();
     }

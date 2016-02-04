@@ -12,4 +12,11 @@
     <string name="action_create_user">Register</string>
     <string name="create_user">Create User</string>
     <string name="facebook_app_id">1318388444853330</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_a_friend">Add a friend</string>
+    <string name="search_friends">Search Friends</string>
+    <string name="friends">Friends</string>
+    <string name="add_friend">Add a Friend</string>
 </resources>
