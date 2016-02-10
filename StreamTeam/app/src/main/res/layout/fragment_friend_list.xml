@@ -4,19 +4,10 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.FriendListFragment">
 
-    <EditText
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/search_friends"
-        android:id="@+id/search_friend_text"/>
-
-
     <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/friend_recycler_view"
-        android:layout_below="@+id/search_friend_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp" />
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

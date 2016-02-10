@@ -1,15 +1,29 @@
 package edu.rosehulman.sanderkd.streamteam.Fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import edu.rosehulman.sanderkd.streamteam.FriendAdapter;
 import edu.rosehulman.sanderkd.streamteam.FriendRequestAdapter;
+import edu.rosehulman.sanderkd.streamteam.MainActivity;
 import edu.rosehulman.sanderkd.streamteam.R;
 
 
@@ -27,6 +41,11 @@ public class AddFriendFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private FriendRequestAdapter mAdapter;
+    private ArrayList<String> mSearch;
+    private SearchView addFriendSearch;
+    private ListView mListView;
+    private boolean searchFocus;
+    private ArrayAdapter<String> mSearchAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -75,45 +94,125 @@ public class AddFriendFragment extends Fragment {
         rv.hasFixedSize();
         mAdapter = new FriendRequestAdapter();
         rv.setAdapter(mAdapter);
+
+        mSearch = new ArrayList<>();
+
+        addFriendSearch = (SearchView) view.findViewById(R.id.add_friend_search);
+        addFriendSearch.setQueryHint("Add a Friend!");
+
+        mListView = (ListView) view.findViewById(R.id.friend_search_list);
+
+        addFriendSearch.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                changeFocus(hasFocus);
+            }
+        });
+
+        addFriendSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText.equals("")){
+                    changeFocus(false);
+                    return true;
+                }
+                else{
+                    if(!searchFocus){
+                        changeFocus(true);
+                    }
+                }
+                mSearch.clear();
+                mSearchAdapter.notifyDataSetChanged();
+                String query = "Exec search_for_friends '" + newText + "'";
+                new Query().execute(query, "search");
+                return true;
+            }
+        });
+
         return view;
     }
 
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
+    private void changeFocus(boolean hasFocus) {
+        searchFocus = hasFocus;
+        if (hasFocus) { //set Listview
+            mSearchAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, mSearch);
+            mListView.setAdapter(mSearchAdapter);
+            mListView.setClickable(true);
+            mListView.bringToFront();
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String query = "Exec new_friend_request '" + MainActivity.USER + "', '" + mSearch.get(position) + "'";
+                    new Query().execute(query, "addFriend");
+                }
+            });
+        } else {
+            mListView.setAdapter(null);
+            mListView.setClickable(false);
+        }
+    }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
+    private class Query extends AsyncTask<String, ResultSet, ResultSet> {
+        String mHandler;
 
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
+        @Override
+        protected void onPreExecute () {
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+        }
+
+        @Override
+        protected void onPostExecute(ResultSet r){
+            if(mHandler.equals("addFriend")){
+                try {
+                    Log.d("AddFriendFragment", r.getMetaData().toString());
+                    r.next();
+                    Log.d("AddFriendFragment", "row0 is called " +r.getRowId(0));
+                    Log.d("AddFriendFragment", "row0 value is " + r.getString(0));
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(AddFriendFragment.this.getContext(), "", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                try{
+                    while(r.next()){
+                        mSearch.add(r.getString("Username"));
+                        mSearchAdapter.notifyDataSetChanged();
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        protected ResultSet doInBackground(String...params){
+            String mQuery = params[0];
+            mHandler = params[1];
+            ResultSet res = null;
+            try {
+                Connection con = MainActivity.con.CONN();
+                if (con == null) {
+                    Log.e("error", "no connection");
+                } else {
+                    Log.d("AddFriendFragment", "Performing query");
+                    CallableStatement stmt = con.prepareCall(mQuery);
+                    Log.d("AddFriendFragment", "Created Statment");
+//                    boolean test = stmt.execute(mQuery);
+                    stmt.execute();
+                    res = stmt.getResultSet();
+                }
+            } catch (Exception ex) {
+                Log.d("db", ex.toString());
+            }
+            return res;
+        }
+    }
 }

@@ -24,6 +24,7 @@ import edu.rosehulman.sanderkd.streamteam.Fragments.AddFriendFragment;
 import edu.rosehulman.sanderkd.streamteam.Fragments.FragmentFacebookLoginButton;
 import edu.rosehulman.sanderkd.streamteam.Fragments.FriendListFragment;
 import edu.rosehulman.sanderkd.streamteam.Fragments.FriendTopFragment;
+import edu.rosehulman.sanderkd.streamteam.Fragments.MessageFragment;
 
 
 public class MainActivity extends AppCompatActivity
@@ -123,8 +124,9 @@ public class MainActivity extends AppCompatActivity
          if (id == R.id.nav_social_media) {
             switchTo = new FragmentFacebookLoginButton();
         } else if (id == R.id.nav_friends) {
-            friendFragment(true);
-
+             friendFragment(true);
+        } else if (id == R.id.nav_messages){
+             switchTo = new MessageFragment();
         } else if (id == R.id.nav_logout) {
             logout();
         }
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity
         if(switchTo!=null){
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.fragment_container, switchTo);
+            ft.remove(mFragmentManager.findFragmentById(R.id.fragment_container_lower));
             ft.commit();
         }
 

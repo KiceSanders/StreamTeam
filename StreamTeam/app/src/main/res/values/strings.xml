@@ -19,4 +19,5 @@
     <string name="search_friends">Search Friends</string>
     <string name="friends">Friends</string>
     <string name="add_friend">Add a Friend</string>
+    <string name="messages">Messages</string>
 </resources>
