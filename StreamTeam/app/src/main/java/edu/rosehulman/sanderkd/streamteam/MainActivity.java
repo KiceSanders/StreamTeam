@@ -32,7 +32,8 @@ import edu.rosehulman.sanderkd.streamteam.Fragments.MessageFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FriendTopFragment.Callback,
-        FriendListFragment.Callback{
+        FriendListFragment.Callback,
+        MessageFragment.Callback{
 
     public static ConnectionClass con;
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
@@ -184,8 +185,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFriendSelect(String user) {
         Intent intent = new Intent(this, MessageActivity.class);
-        Bundle b = new Bundle();
-        b.putString("FRIEND", user);
+        intent.putExtra("friend", user);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onFriendChoose(String user) {
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra("friend", user);
         startActivity(intent);
         finish();
     }

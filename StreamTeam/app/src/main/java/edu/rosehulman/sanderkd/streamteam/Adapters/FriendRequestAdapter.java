@@ -28,6 +28,8 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     ArrayList<String> mFriendRequestArray;
     Context mContext;
 
+
+
     public FriendRequestAdapter(Context context){
         mContext = context;
         mFriendRequestArray = new ArrayList<>();
@@ -86,6 +88,8 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         }
     }
 
+
+
     private class FriendRequestQuery extends AsyncTask<String, ResultSet, ResultSet> {
         @Override
         protected void onPreExecute () {
@@ -135,6 +139,8 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
             return res;
         }
     }
+
+
 }
 
 
