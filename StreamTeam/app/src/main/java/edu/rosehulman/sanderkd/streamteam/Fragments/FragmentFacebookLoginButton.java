@@ -22,6 +22,12 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
+
 import edu.rosehulman.sanderkd.streamteam.R;
 
 /**
@@ -161,6 +167,19 @@ public class FragmentFacebookLoginButton extends Fragment {
                     public void onCompleted(GraphResponse response) {
                         /* handle the result */
                         Log.d("db - fb", response.toString());
+                        JSONObject j = response.getJSONObject();
+                        Iterator<String> keys = j.keys();
+
+                        while(keys.hasNext()) {
+                            String key = (String) keys.next();
+                            try {
+                                if (j.get(key) instanceof JSONObject) {
+                                    mTextDetails.append(j.get(key).toString());
+                                }
+                            } catch(JSONException e) {
+                                Log.d("db - fb", e.toString());
+                            }
+                        }
                     }
                 }
         ).executeAsync();
