@@ -89,7 +89,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             try{
                 mMessages.clear();
                 while(r.next()){
-                    mMessages.add(r.getString("message"));
+                    mMessages.add(0, r.getString("message"));
                 }
 
             }
