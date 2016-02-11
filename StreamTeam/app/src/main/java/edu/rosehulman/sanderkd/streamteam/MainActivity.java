@@ -134,7 +134,9 @@ public class MainActivity extends AppCompatActivity
         if(switchTo!=null){
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.fragment_container, switchTo);
-            ft.remove(mFragmentManager.findFragmentById(R.id.fragment_container_lower));
+            if(mFragmentManager.findFragmentById(R.id.fragment_container_lower) != null) {
+                ft.remove(mFragmentManager.findFragmentById(R.id.fragment_container_lower));
+            }
             ft.commit();
         }
 
