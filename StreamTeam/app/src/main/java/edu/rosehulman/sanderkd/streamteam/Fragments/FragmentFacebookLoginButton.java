@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -23,11 +25,15 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import edu.rosehulman.sanderkd.streamteam.FacebookPost;
 import edu.rosehulman.sanderkd.streamteam.R;
 
 /**
@@ -41,6 +47,8 @@ public class FragmentFacebookLoginButton extends Fragment {
 
     private AccessTokenTracker mTokenTracker;
     private ProfileTracker mProfileTracker;
+    private ListView mListView;
+    private ArrayAdapter<String> mAdapter;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +69,7 @@ public class FragmentFacebookLoginButton extends Fragment {
         mTokenTracker.startTracking();
         mProfileTracker.startTracking();
 
-
+        mListView = (ListView) view.findViewById(R.id.feed_list_view);
         return view;
     }
 
@@ -168,34 +176,54 @@ public class FragmentFacebookLoginButton extends Fragment {
                         /* handle the result */
                         Log.d("db - fb", response.toString());
                         JSONObject j = response.getJSONObject();
-                        Iterator<String> keys = j.keys();
-
-                        while(keys.hasNext()) {
-                            String key = (String) keys.next();
+                        List<FacebookPost> fb_posts = new ArrayList<FacebookPost>();
+                        JSONArray a = null;
+                        try {
+                            a = j.getJSONArray("data");
+                        } catch (JSONException e) {
+                            Log.d("db - fb", e.getMessage());
+                        }
+                        for (int i = 0; i < a.length(); i++) {
                             try {
-                                if (j.get(key) instanceof JSONObject) {
-                                    mTextDetails.append(j.get(key).toString());
-                                }
-                            } catch(JSONException e) {
-                                Log.d("db - fb", e.toString());
+                                FacebookPost p = new FacebookPost(a.getJSONObject(i).getString("message"), a.getJSONObject(i).getString("story"), a.getJSONObject(i).getString("time"));
+                                fb_posts.add(p);
+                            } catch (JSONException e) {
+                                Log.d("db - fb", e.getMessage());
                             }
                         }
+
+                        // TODO: use fb_posts to add to android view
+//                        mAdapter = new ArrayAdapter<FacebookPost>(getContext(), android.R.layout.simple_expandable_list_item_1, list);
+//                        mListView.setAdapter(mAdapter);
                     }
                 }
         ).executeAsync();
 
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/{user-id}",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-                        /* handle the result */
-                        Log.d("db - fb", response.toString());
-                    }
-                }
-        ).executeAsync();
+//        new GraphRequest(
+//                AccessToken.getCurrentAccessToken(),
+//                "/{user-id}",
+//                null,
+//                HttpMethod.GET,
+//                new GraphRequest.Callback() {
+//                    public void onCompleted(GraphResponse response) {
+//                        /* handle the result */
+//                        Log.d("db - fb", response.toString());
+//                        JSONObject j = response.getJSONObject();
+//                        Iterator<String> keys = j.keys();
+//
+//                        while(keys.hasNext()) {
+//                            String key = (String) keys.next();
+//                            try {
+//                                if (j.get(key) instanceof JSONObject) {
+////                                    mTextDetails.append(((JSONObject) j.get(key)).);
+//                                }
+//                            } catch(JSONException e) {
+//                                Log.d("db - fb", e.toString());
+//                            }
+//                        }
+//                    }
+//                }
+//        ).executeAsync();
     }
 
 }

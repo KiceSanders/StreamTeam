@@ -21,4 +21,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="37dp" />
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/feed_list_view"
+        android:layout_below="@+id/login_button"
+        android:layout_marginTop="43dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
