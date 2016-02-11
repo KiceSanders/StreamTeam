@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.facebook.login.widget.ProfilePictureView;
+
 import edu.rosehulman.sanderkd.streamteam.Fragments.AddFriendFragment;
 import edu.rosehulman.sanderkd.streamteam.Fragments.FragmentFacebookLoginButton;
 import edu.rosehulman.sanderkd.streamteam.Fragments.FriendListFragment;
@@ -28,13 +30,15 @@ import edu.rosehulman.sanderkd.streamteam.Fragments.MessageFragment;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FriendTopFragment.Callback{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        FriendTopFragment.Callback,
+        FriendListFragment.Callback{
 
     public static ConnectionClass con;
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
     public static final int REQUEST_LOGIN = 1;
-    public TextView mText;
     public static String USER;
+    public static ProfilePictureView mPic;
 
     private FragmentManager mFragmentManager;
 
@@ -47,15 +51,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -72,7 +67,6 @@ public class MainActivity extends AppCompatActivity
             logout();
         }
 
-        Log.d("db", "message to be displayed");
     }
 
     @Override
@@ -108,6 +102,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK){
             USER = data.getStringExtra(EXTRA_USERNAME);
         }
@@ -184,5 +179,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Boolean friend) {
         friendFragment(friend);
+    }
+
+    @Override
+    public void onFriendSelect(String user) {
+        Intent intent = new Intent(this, MessageActivity.class);
+        Bundle b = new Bundle();
+        b.putString("FRIEND", user);
+        startActivity(intent);
+        finish();
     }
 }

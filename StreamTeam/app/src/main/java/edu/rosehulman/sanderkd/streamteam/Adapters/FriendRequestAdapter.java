@@ -1,5 +1,6 @@
-package edu.rosehulman.sanderkd.streamteam;
+package edu.rosehulman.sanderkd.streamteam.Adapters;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -16,13 +18,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import edu.rosehulman.sanderkd.streamteam.MainActivity;
+import edu.rosehulman.sanderkd.streamteam.R;
+
 /**
  * Created by sanderkd on 2/4/2016.
  */
 public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdapter.ViewHolder>{
     ArrayList<String> mFriendRequestArray;
+    Context mContext;
 
-    public FriendRequestAdapter(){
+    public FriendRequestAdapter(Context context){
+        mContext = context;
         mFriendRequestArray = new ArrayList<>();
         String query = "Exec get_friend_requests '" + MainActivity.USER + "'";
         new FriendRequestQuery().execute(query);
@@ -41,13 +48,19 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
             public void onClick(View v) {
                 String query = "Exec handle_friend_request 1, '" + mFriendRequestArray.get(position) + "', '" + MainActivity.USER + "'";
                 new FriendRequestQuery().execute(query);
+                Toast.makeText(mContext, mFriendRequestArray.get(position)+" added", Toast.LENGTH_SHORT).show();
+                mFriendRequestArray.remove(position);
+                notifyDataSetChanged();
             }
         });
         holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String query = "Exec handle_friend_request 0, '" +mFriendRequestArray.get(position)+ "', '" +MainActivity.USER + "'";
+                String query = "Exec handle_friend_request 0, '" +mFriendRequestArray.get(position)+ "', '" + MainActivity.USER+ "'";
                 new FriendRequestQuery().execute(query);
+                Toast.makeText(mContext, mFriendRequestArray.get(position)+" deleted", Toast.LENGTH_SHORT).show();
+                mFriendRequestArray.remove(position);
+                notifyDataSetChanged();
             }
         });
     }

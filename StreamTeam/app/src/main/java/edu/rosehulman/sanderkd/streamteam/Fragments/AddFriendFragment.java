@@ -21,8 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import edu.rosehulman.sanderkd.streamteam.FriendAdapter;
-import edu.rosehulman.sanderkd.streamteam.FriendRequestAdapter;
+import edu.rosehulman.sanderkd.streamteam.Adapters.FriendRequestAdapter;
 import edu.rosehulman.sanderkd.streamteam.MainActivity;
 import edu.rosehulman.sanderkd.streamteam.R;
 
@@ -46,6 +45,7 @@ public class AddFriendFragment extends Fragment {
     private ListView mListView;
     private boolean searchFocus;
     private ArrayAdapter<String> mSearchAdapter;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -92,7 +92,7 @@ public class AddFriendFragment extends Fragment {
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.friend_request_recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.hasFixedSize();
-        mAdapter = new FriendRequestAdapter();
+        mAdapter = new FriendRequestAdapter(getContext());
         rv.setAdapter(mAdapter);
 
         mSearch = new ArrayList<>();
@@ -127,8 +127,9 @@ public class AddFriendFragment extends Fragment {
                     }
                 }
                 mSearch.clear();
+                Log.d("AddFriendFrag","mSearch: "+mSearch.toString());
                 mSearchAdapter.notifyDataSetChanged();
-                String query = "Exec search_for_friends '" + newText + "'";
+                String query = "Exec search_for_friends '" + newText + "', '" + MainActivity.USER + "'" ;
                 new Query().execute(query, "search");
                 return true;
             }
@@ -168,27 +169,21 @@ public class AddFriendFragment extends Fragment {
         @Override
         protected void onPostExecute(ResultSet r){
             if(mHandler.equals("addFriend")){
-                try {
-                    Log.d("AddFriendFragment", r.getMetaData().toString());
-                    r.next();
-                    Log.d("AddFriendFragment", "row0 is called " +r.getRowId(0));
-                    Log.d("AddFriendFragment", "row0 value is " + r.getString(0));
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
                 Toast.makeText(AddFriendFragment.this.getContext(), "", Toast.LENGTH_SHORT).show();
             }
             else{
-                try{
-                    while(r.next()){
-                        mSearch.add(r.getString("Username"));
-                        mSearchAdapter.notifyDataSetChanged();
+                try {
+                    if (r.next()) {
+                        while (r.next()) {
+                            Log.d("AddFriendFrag", r.getString("Username"));
+                            mSearch.add(r.getString("Username"));
+                            mSearchAdapter.notifyDataSetChanged();
+                        }
+                    }
+                    }catch(SQLException e){
+                        e.printStackTrace();
                     }
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
         }
 

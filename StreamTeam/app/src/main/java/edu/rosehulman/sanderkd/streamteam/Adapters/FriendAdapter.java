@@ -1,6 +1,5 @@
-package edu.rosehulman.sanderkd.streamteam;
+package edu.rosehulman.sanderkd.streamteam.Adapters;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -19,15 +17,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import edu.rosehulman.sanderkd.streamteam.Fragments.FriendListFragment;
+import edu.rosehulman.sanderkd.streamteam.MainActivity;
+import edu.rosehulman.sanderkd.streamteam.MessageActivity;
+import edu.rosehulman.sanderkd.streamteam.R;
+
 /**
  * Created by sanderkd on 2/3/2016.
  */
 
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder>{
     ArrayList<String> mFriendArray;
+    FriendListFragment mFragment;
 
-    public FriendAdapter(){
+    public FriendAdapter(FriendListFragment frag){
         mFriendArray = new ArrayList<>();
+        mFragment = frag;
         String query = "Exec get_Friends '" + MainActivity.USER + "'";
         new FriendQuery().execute(query);
     }
@@ -40,6 +45,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mText.setText(mFriendArray.get(position));
+
     }
 
     @Override
@@ -57,6 +63,13 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
 
             mImage = (ImageView) itemView.findViewById(R.id.friend_row_image);
             mText = (TextView) itemView.findViewById(R.id.friend_row_text);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mFragment.mListener.onFriendSelect(mText.toString());
+                }
+            });
         }
     }
 

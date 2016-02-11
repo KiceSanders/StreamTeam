@@ -14,11 +14,14 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.login.widget.ProfilePictureView;
 
+import edu.rosehulman.sanderkd.streamteam.MainActivity;
 import edu.rosehulman.sanderkd.streamteam.R;
 
 /**
@@ -28,55 +31,36 @@ public class FragmentFacebookLoginButton extends Fragment {
 
     private TextView mTextDetails;
     private CallbackManager mCallbackManager;
+    private LoginButton mFacebookLogin;
 
     private AccessTokenTracker mTokenTracker;
     private ProfileTracker mProfileTracker;
 
-    private FacebookCallback<LoginResult> mFacebookCallback=new FacebookCallback<LoginResult>() {
-        @Override
-        public void onSuccess(LoginResult loginResult) {
-            Log.d("db", "facebook login success");
-            AccessToken accessToken = loginResult.getAccessToken();
-            Profile profile = Profile.getCurrentProfile();
-            mTextDetails.setText(constructWelcomeMessage(profile));
-        }
-
-        @Override
-        public void onCancel() {
-
-            Log.d("db", "facebook login cancelled");
-        }
-
-        @Override
-        public void onError(FacebookException error) {
-
-            Log.d("db", "facebook login error: " + error);
-        }
-    };
-
-    public FragmentFacebookLoginButton() {
-
-    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
 
         mCallbackManager=CallbackManager.Factory.create();
+
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_facebook_login, container, false);
+
+        setupLoginButton(view);
         setupTokenTracker();
         setupProfileTracker();
 
         mTokenTracker.startTracking();
         mProfileTracker.startTracking();
-    }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_facebook_login, container, false);
+
+        return view;
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         setupTextDetails(view);
-        setupLoginButton(view);
     }
 
     @Override
@@ -96,6 +80,7 @@ public class FragmentFacebookLoginButton extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("db", "got activity result");
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -123,12 +108,35 @@ public class FragmentFacebookLoginButton extends Fragment {
         };
     }
 
-    private void setupLoginButton(View view) {
-        LoginButton mButtonLogin = (LoginButton) view.findViewById(R.id.login_button);
-        mButtonLogin.setFragment(FragmentFacebookLoginButton.this);
-        mButtonLogin.setReadPermissions("user_friends");
-        mButtonLogin.registerCallback(mCallbackManager, mFacebookCallback);
+    private void setupLoginButton(final View view) {
+        mFacebookLogin = (LoginButton) view.findViewById(R.id.login_button);
+        mFacebookLogin.setFragment(this);
+        mFacebookLogin.setReadPermissions("user_friends", "user_posts");
+        mFacebookLogin.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("db", "facebook login success");
+                AccessToken accessToken = loginResult.getAccessToken();
+                Log.d("access", accessToken.toString());
+                Profile profile = Profile.getCurrentProfile();
+                mTextDetails.setText(constructWelcomeMessage(profile));
+            }
+
+            @Override
+            public void onCancel() {
+
+                Log.d("db", "facebook login cancelled");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+                Log.d("db", "facebook login error: " + error);
+            }
+        });
     }
+
+
 
     private String constructWelcomeMessage(Profile profile) {
         StringBuffer stringBuffer = new StringBuffer();
