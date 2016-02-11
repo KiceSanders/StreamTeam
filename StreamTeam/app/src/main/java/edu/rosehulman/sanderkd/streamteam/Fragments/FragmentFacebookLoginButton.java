@@ -15,13 +15,13 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.login.widget.ProfilePictureView;
-
-import edu.rosehulman.sanderkd.streamteam.MainActivity;
 import edu.rosehulman.sanderkd.streamteam.R;
 
 /**
@@ -68,6 +68,8 @@ public class FragmentFacebookLoginButton extends Fragment {
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
         mTextDetails.setText(constructWelcomeMessage(profile));
+        if(profile != null)
+            setupPosts(profile);
     }
 
     @Override
@@ -120,6 +122,7 @@ public class FragmentFacebookLoginButton extends Fragment {
                 Log.d("access", accessToken.toString());
                 Profile profile = Profile.getCurrentProfile();
                 mTextDetails.setText(constructWelcomeMessage(profile));
+                setupPosts(profile);
             }
 
             @Override
@@ -146,4 +149,34 @@ public class FragmentFacebookLoginButton extends Fragment {
         }
         return stringBuffer.toString();
     }
+
+    private void setupPosts(Profile profile) {
+        Log.d("db - fb", "setupPosts entered");
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/feed",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        /* handle the result */
+                        Log.d("db - fb", response.toString());
+                    }
+                }
+        ).executeAsync();
+
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/{user-id}",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        /* handle the result */
+                        Log.d("db - fb", response.toString());
+                    }
+                }
+        ).executeAsync();
+    }
+
 }
