@@ -87,16 +87,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         @Override
         protected void onPostExecute(ResultSet r){
             try{
-                mMessages.clear();
+                for(int i =0; i < mMessages.size() ; i++) {
+                    r.next();
+                }
                 while(r.next()){
-                    mMessages.add(0, r.getString("message"));
+                    mMessages.add(r.getString("message"));
+                    notifyDataSetChanged();
                 }
 
             }
             catch (SQLException e){
                 e.printStackTrace();
             }
-            notifyDataSetChanged();
+            Log.d("messages", mMessages.toString());
 
         }
 

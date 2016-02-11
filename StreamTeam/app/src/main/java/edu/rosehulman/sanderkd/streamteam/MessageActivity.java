@@ -50,7 +50,6 @@ public class MessageActivity extends AppCompatActivity {
         mSendMessage.setEnabled(false);
         mRecyclerView = (RecyclerView) findViewById(R.id.messages_recycler);
         LinearLayoutManager lm = new LinearLayoutManager(this);
-        lm.setReverseLayout(true);
         mRecyclerView.setLayoutManager(lm);
 
 
