@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     tools:context="edu.rosehulman.sanderkd.streamteam.MessageActivity">
 
 
@@ -13,7 +15,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/messages_recycler"
-        android:layout_above="@+id/send_message_button"></android.support.v7.widget.RecyclerView>
+        android:layout_above="@+id/send_message_text">
+
+    </android.support.v7.widget.RecyclerView>
 
     <EditText
         android:layout_width="340dp"

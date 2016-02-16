@@ -1,8 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    tools:context="edu.rosehulman.sanderkd.StreamTeam.FriendTopFragment">
+    tools:context="edu.rosehulman.sanderkd.StreamTeam.FriendTopFragment"
+    android:orientation="horizontal">
 
 
     <Button
@@ -16,9 +17,5 @@
         android:layout_width="189dp"
         android:layout_height="wrap_content"
         android:text="@string/add_friend"
-        android:id="@+id/friend_request_view_button"
-        android:layout_gravity="right|top"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/friend_view_button"
-        android:layout_toEndOf="@+id/friend_view_button" />
-</RelativeLayout>
+        android:id="@+id/friend_request_view_button" />
+</LinearLayout>

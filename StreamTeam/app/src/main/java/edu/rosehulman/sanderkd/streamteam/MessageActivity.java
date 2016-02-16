@@ -53,7 +53,7 @@ public class MessageActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(lm);
 
 
-        mRecyclerView.setAdapter(new MessageAdapter(User2));
+        mRecyclerView.setAdapter(new MessageAdapter(User2, lm));
 
         mEditMessage.addTextChangedListener(tw);
 

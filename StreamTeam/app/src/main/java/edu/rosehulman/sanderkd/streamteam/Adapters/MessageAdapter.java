@@ -1,6 +1,7 @@
 package edu.rosehulman.sanderkd.streamteam.Adapters;
 
 import android.os.AsyncTask;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,12 +25,14 @@ import edu.rosehulman.sanderkd.streamteam.R;
  */
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
-    ArrayList<String> mMessages;
-    String User2;
+    private ArrayList<String> mMessages;
+    private String User2;
+    private LinearLayoutManager mLayoutManager;
 
-    public MessageAdapter(String u){
+    public MessageAdapter(String u, LinearLayoutManager layout){
         User2 = u;
         mMessages = new ArrayList<>();
+        mLayoutManager = layout;
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -38,7 +41,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 String query = "Exec get_messages '" + MainActivity.USER + "', '" + User2 + "'";
                 new MessageQuery().execute(query, "get_messages");
             }
-        }, 0, 1000);
+        }, 0, 1500);
 
 
     }
@@ -52,13 +55,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        int length = MainActivity.USER.length();
         String[] arr = mMessages.get(position).split("/n");
-        if(mMessages.get(position).substring(0, length).equals(MainActivity.USER)){
+        int length = MainActivity.USER.length();
+        if (mMessages.get(position).substring(0, length).equals(MainActivity.USER)) {
             holder.u1Text.setText(arr[1].trim());
-        }
-        else{
+            holder.u2Text.setText("");
+        } else {
             holder.u2Text.setText(arr[1].trim());
+            holder.u1Text.setText("");
         }
     }
 
@@ -87,20 +91,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         @Override
         protected void onPostExecute(ResultSet r){
             try{
-                for(int i =0; i < mMessages.size() ; i++) {
+                for(int i=0; i < mMessages.size(); i++){
                     r.next();
                 }
-                while(r.next()){
+                while (r.next()) {
                     mMessages.add(r.getString("message"));
                     notifyDataSetChanged();
+                    mLayoutManager.scrollToPosition(mMessages.size() -1);
                 }
+
+
+
 
             }
             catch (SQLException e){
                 e.printStackTrace();
             }
-            Log.d("messages", mMessages.toString());
-
         }
 
         @Override
@@ -124,4 +130,5 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             return res;
         }
     }
+
 }

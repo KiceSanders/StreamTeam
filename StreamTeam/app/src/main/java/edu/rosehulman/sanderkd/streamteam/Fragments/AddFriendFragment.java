@@ -173,7 +173,7 @@ public class AddFriendFragment extends Fragment {
             }
             else{
                 try {
-                    if (r.next()) {
+                    if (r != null) {
                         while (r.next()) {
                             Log.d("AddFriendFrag", r.getString("Username"));
                             mSearch.add(r.getString("Username"));
@@ -197,10 +197,7 @@ public class AddFriendFragment extends Fragment {
                 if (con == null) {
                     Log.e("error", "no connection");
                 } else {
-                    Log.d("AddFriendFragment", "Performing query");
                     CallableStatement stmt = con.prepareCall(mQuery);
-                    Log.d("AddFriendFragment", "Created Statment");
-//                    boolean test = stmt.execute(mQuery);
                     stmt.execute();
                     res = stmt.getResultSet();
                 }
