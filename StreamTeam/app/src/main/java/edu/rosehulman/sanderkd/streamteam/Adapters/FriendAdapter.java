@@ -45,6 +45,12 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mText.setText(mFriendArray.get(position));
+        holder.mText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragment.mListener.onFriendView(holder.mText.getText().toString());
+            }
+        });
         holder.mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +74,6 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         public ViewHolder(View itemView) {
             super(itemView);
 
-            mImage = (ImageView) itemView.findViewById(R.id.friend_row_image);
             mText = (TextView) itemView.findViewById(R.id.friend_row_text);
             mButton = (Button) itemView.findViewById(R.id.start_message_button);
 

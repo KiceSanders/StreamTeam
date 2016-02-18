@@ -54,8 +54,7 @@
             android:textColor="#ffffff"
             android:textColorHighlight="#ffffff"
             android:textColorHint="#ffffff"
-            android:textColorLink="#ffffff"
-            android:text="test"/>
+            android:textColorLink="#ffffff"/>
 
         <EditText
             android:id="@+id/password"
@@ -72,8 +71,7 @@
             android:textColor="#ffffff"
             android:textColorHighlight="#ffffff"
             android:textColorHint="#ffffff"
-            android:textColorLink="#ffffff"
-            android:text="testpass23"/>
+            android:textColorLink="#ffffff"/>
 
         <Button
             android:id="@+id/email_sign_in_button"

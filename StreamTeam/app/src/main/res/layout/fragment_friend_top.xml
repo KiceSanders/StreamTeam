@@ -1,21 +1,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     tools:context="edu.rosehulman.sanderkd.StreamTeam.FriendTopFragment"
     android:orientation="horizontal">
 
-
     <Button
-        android:layout_width="191dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/friends"
         android:id="@+id/friend_view_button"
+        android:layout_weight=".3"
         android:layout_gravity="left|top" />
 
     <Button
-        android:layout_width="189dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/add_friend"
+        android:layout_weight=".3"
         android:id="@+id/friend_request_view_button" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ignore"
+        android:layout_weight=".3"
+        android:id="@+id/ignore_view_button" />
+
 </LinearLayout>

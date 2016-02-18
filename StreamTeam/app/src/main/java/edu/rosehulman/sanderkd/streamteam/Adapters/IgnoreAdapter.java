@@ -22,18 +22,18 @@ import edu.rosehulman.sanderkd.streamteam.MainActivity;
 import edu.rosehulman.sanderkd.streamteam.R;
 
 /**
- * Created by sanderkd on 2/4/2016.
+ * Created by sanderkd on 2/15/2016.
  */
-public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdapter.ViewHolder>{
+public class IgnoreAdapter extends RecyclerView.Adapter<IgnoreAdapter.ViewHolder>{
     ArrayList<String> mFriendRequestArray;
     Context mContext;
 
 
 
-    public FriendRequestAdapter(Context context){
+    public IgnoreAdapter(Context context){
         mContext = context;
         mFriendRequestArray = new ArrayList<>();
-        String query = "Exec get_friend_requests '" + MainActivity.USER + "'";
+        String query = "Exec get_ignore '" + MainActivity.USER + "'";
         new FriendRequestQuery().execute(query);
     }
     @Override
@@ -42,26 +42,21 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         return new ViewHolder(view);
     }
 
+    public void addToIgnore(String user){
+        mFriendRequestArray.add(user);
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.mText.setText(mFriendRequestArray.get(position));
-        holder.mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String query = "Exec handle_friend_request 1, '" + mFriendRequestArray.get(position) + "', '" + MainActivity.USER + "'";
-                new FriendRequestQuery().execute(query);
-                Toast.makeText(mContext, mFriendRequestArray.get(position)+" added", Toast.LENGTH_SHORT).show();
-                mFriendRequestArray.remove(position);
-                notifyDataSetChanged();
-            }
-        });
         holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String query = "Exec handle_friend_request 0, '" +mFriendRequestArray.get(position)+ "', '" + MainActivity.USER+ "'";
-                new FriendRequestQuery().execute(query);
-                Toast.makeText(mContext, mFriendRequestArray.get(position)+" deleted", Toast.LENGTH_SHORT).show();
                 mFriendRequestArray.remove(position);
+//                String query = "Exec handle_friend_request 0, '" +mFriendRequestArray.get(position)+ "', '" + MainActivity.USER+ "'";
+//                new FriendRequestQuery().execute(query);
+//                Toast.makeText(mContext, mFriendRequestArray.get(position)+" deleted", Toast.LENGTH_SHORT).show();
+//                mFriendRequestArray.remove(position);
                 notifyDataSetChanged();
             }
         });
@@ -83,6 +78,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
             mText = (TextView) itemView.findViewById(R.id.friend_row_text);
             mAddButton = (Button) itemView.findViewById(R.id.friend_request_add);
+            mAddButton.setVisibility(View.INVISIBLE);
             mDeleteButton = (Button) itemView.findViewById(R.id.friend_request_delete);
         }
     }
@@ -100,11 +96,8 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
             if (r != null) {
                 try {
                     while (r.next()) {
-                        if (r.getString("User1").equals(MainActivity.USER)) {
-                            mFriendRequestArray.add(r.getString("User2"));
-                        } else {
-                            mFriendRequestArray.add(r.getString("User1"));
-                        }
+                        mFriendRequestArray.add(r.getString("IgnoreName"));
+
                     }
 
                 }
@@ -125,9 +118,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 if (con == null) {
                     Log.e("error", "no connection");
                 } else {
-                    Log.d("FriendAdapter", "Performing query");
                     CallableStatement stmt = con.prepareCall(mQuery);
-                    Log.d("FriendAdapter", "Created Statment");
 //                    boolean test = stmt.execute(mQuery);
                     stmt.execute();
                     res = stmt.getResultSet();
@@ -141,5 +132,3 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
 
 }
-
-

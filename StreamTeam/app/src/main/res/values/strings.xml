@@ -18,7 +18,12 @@
     <string name="add_a_friend">Add a friend</string>
     <string name="search_friends">Search Friends</string>
     <string name="friends">Friends</string>
-    <string name="add_friend">Add a Friend</string>
+    <string name="add_friend">Add Friend</string>
     <string name="messages">Messages</string>
     <string name="send">Send</string>
+    <string name="ignore">Ignore</string>
+    <string name="frag_int_friend">friend</string>
+    <string name="frag_int_friend_req">friend_request</string>
+    <string name="frag_int_ignore">ignore</string>
+    <string name="ignore_person">Ignore Person</string>
 </resources>

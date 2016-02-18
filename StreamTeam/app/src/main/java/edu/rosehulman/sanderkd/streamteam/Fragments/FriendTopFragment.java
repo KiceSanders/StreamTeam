@@ -21,6 +21,7 @@ public class FriendTopFragment extends Fragment {
     private Callback mListener;
     private Button mFriendsButton;
     private Button mFriendRequestButton;
+    private Button mIgnoreButton;
 
     public FriendTopFragment() {
         // Required empty public constructor
@@ -34,22 +35,28 @@ public class FriendTopFragment extends Fragment {
         mFriendsButton = (Button) view.findViewById(R.id.friend_view_button);
         mFriendsButton.setBackgroundResource(R.color.friend_button_background);
         mFriendRequestButton = (Button) view.findViewById(R.id.friend_request_view_button);
+        mIgnoreButton = (Button) view.findViewById(R.id.ignore_view_button);
         mFriendsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //show friend tab
-                mFriendRequestButton.setBackgroundResource(android.R.drawable.btn_default);
-                mFriendsButton.setBackgroundResource(R.color.friend_button_background);
-                mListener.onFragmentInteraction(true);
+                setBackgroundColor(mFriendsButton);
+                mListener.onFragmentInteraction(getContext().getString(R.string.frag_int_friend));
             }
         });
         mFriendRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //show friend-request tab
-                mFriendsButton.setBackgroundResource(android.R.drawable.btn_default);
-                mFriendRequestButton.setBackgroundResource(R.color.friend_button_background);
-                mListener.onFragmentInteraction(false);
+                setBackgroundColor(mFriendRequestButton);
+                mListener.onFragmentInteraction(getContext().getString(R.string.frag_int_friend_req));
+            }
+        });
+        mIgnoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setBackgroundColor(mIgnoreButton);
+                mListener.onFragmentInteraction(getContext().getString(R.string.frag_int_ignore));
             }
         });
         return view;
@@ -84,6 +91,13 @@ public class FriendTopFragment extends Fragment {
      */
     public interface Callback{
         // TODO: Update argument type and name
-        void onFragmentInteraction(Boolean friend);
+        void onFragmentInteraction(String tab);
+    }
+
+    private void setBackgroundColor(Button button){
+        button.setBackgroundResource(R.color.friend_button_background);
+        if(!mIgnoreButton.equals(button)) mIgnoreButton.setBackgroundResource(android.R.drawable.btn_default);
+        if(!mFriendsButton.equals(button)) mFriendsButton.setBackgroundResource(android.R.drawable.btn_default);
+        if(!mFriendRequestButton.equals(button)) mFriendRequestButton.setBackgroundResource(android.R.drawable.btn_default);
     }
 }

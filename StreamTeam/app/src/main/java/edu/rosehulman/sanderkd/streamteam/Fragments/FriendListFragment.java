@@ -109,5 +109,6 @@ public class FriendListFragment extends Fragment {
     public interface Callback {
         // TODO: Update argument type and name
         void onFriendSelect(String user);
+        void onFriendView(String user);
     }
 }

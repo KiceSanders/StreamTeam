@@ -3,30 +3,21 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/friend_row_image"
-        android:src="@drawable/user_picture"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"
         android:id="@+id/friend_row_text"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/friend_row_image"
-        android:layout_toEndOf="@+id/friend_row_image"
-        android:layout_marginLeft="23dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="23dp" />
+        android:textSize="25dp"
+        android:layout_alignBottom="@+id/start_message_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/start_message_button"
         android:background="@android:drawable/ic_dialog_email"
-        android:layout_alignBottom="@+id/friend_row_image"
         android:layout_marginLeft="62dp"
         android:layout_marginStart="250dp" />
 

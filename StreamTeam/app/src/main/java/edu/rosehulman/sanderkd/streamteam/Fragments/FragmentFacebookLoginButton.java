@@ -3,6 +3,8 @@ package edu.rosehulman.sanderkd.streamteam.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.rosehulman.sanderkd.streamteam.Adapters.FacebookAdapter;
 import edu.rosehulman.sanderkd.streamteam.FacebookPost;
 import edu.rosehulman.sanderkd.streamteam.R;
 
@@ -47,8 +50,8 @@ public class FragmentFacebookLoginButton extends Fragment {
 
     private AccessTokenTracker mTokenTracker;
     private ProfileTracker mProfileTracker;
-    private ListView mListView;
-    private ArrayAdapter<String> mAdapter;
+    private RecyclerView mListView;
+    private FacebookAdapter mAdapter;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -68,8 +71,8 @@ public class FragmentFacebookLoginButton extends Fragment {
 
         mTokenTracker.startTracking();
         mProfileTracker.startTracking();
+        mListView = (RecyclerView) view.findViewById(R.id.feed_list_view);
 
-        mListView = (ListView) view.findViewById(R.id.feed_list_view);
         return view;
     }
 
@@ -176,7 +179,7 @@ public class FragmentFacebookLoginButton extends Fragment {
                         /* handle the result */
                         Log.d("db - fb", response.toString());
                         JSONObject j = response.getJSONObject();
-                        List<FacebookPost> fb_posts = new ArrayList<FacebookPost>();
+                        ArrayList<FacebookPost> fb_posts = new ArrayList<FacebookPost>();
                         JSONArray a = null;
                         try {
                             a = j.getJSONArray("data");
@@ -185,7 +188,10 @@ public class FragmentFacebookLoginButton extends Fragment {
                         }
                         for (int i = 0; i < a.length(); i++) {
                             try {
-                                FacebookPost p = new FacebookPost(a.getJSONObject(i).getString("message"), a.getJSONObject(i).getString("story"), a.getJSONObject(i).getString("time"));
+                                Log.d("feed", a.getJSONObject(i).getString("message"));
+                                Log.d("feed", a.getJSONObject(i).getString("story"));
+                                Log.d("feed", a.getJSONObject(i).getString("created_time"));
+                                FacebookPost p = new FacebookPost(a.getJSONObject(i).getString("message"), a.getJSONObject(i).getString("story"), a.getJSONObject(i).getString("created_time"));
                                 fb_posts.add(p);
                             } catch (JSONException e) {
                                 Log.d("db - fb", e.getMessage());
@@ -195,6 +201,10 @@ public class FragmentFacebookLoginButton extends Fragment {
                         // TODO: use fb_posts to add to android view
 //                        mAdapter = new ArrayAdapter<FacebookPost>(getContext(), android.R.layout.simple_expandable_list_item_1, list);
 //                        mListView.setAdapter(mAdapter);
+                        mAdapter = new FacebookAdapter(fb_posts);
+                        mListView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        mListView.setAdapter(mAdapter);
+                        Log.d("db", fb_posts.toString());
                     }
                 }
         ).executeAsync();

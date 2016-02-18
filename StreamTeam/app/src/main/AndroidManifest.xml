@@ -35,7 +35,22 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".MessageActivity"></activity>
+        <activity
+            android:name=".MessageActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.rosehulman.sanderkd.streamteam.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Adapters.UserViewActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.rosehulman.sanderkd.streamteam.MainActivity" />
+        </activity>
+        <activity android:name=".UserViewActivity" />
+        <activity android:name=".FriendViewActivity"></activity>
     </application>
 
 </manifest>

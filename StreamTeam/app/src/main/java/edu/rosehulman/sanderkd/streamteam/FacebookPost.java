@@ -13,4 +13,16 @@ public class FacebookPost {
         this.story = s;
         this.time = t;
     }
+
+    public String getMessage(){
+        return this.message;
+    }
+
+    public String getStory(){
+        return this.story;
+    }
+
+    public String getTime(){
+        return this.time;
+    }
 }
